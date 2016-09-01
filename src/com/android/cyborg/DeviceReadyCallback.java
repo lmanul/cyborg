@@ -14,29 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.cyborg;
+package.android.cyborg;
 
 import com.android.ddmlib.IDevice;
 
-public class Cyborg {
+public interface DeviceReadyCallback {
 
-  /** Device proxy to communicate with devices. */
-  private static final DeviceProxy deviceProxy;
-
-  /** The device paired with this cyborg instance. */
-  private final IDevice device;
-
-  static {
-    deviceProxy = DeviceProxy.getInstance();
-  }
-
-  public Cyborg() {
-    // Empty constructor, assume first connected device.
-    Cyborg(deviceProxy.getFirstConnectedDevice());
-  }
-
-  public Cyborg(IDevice device) {
-    this.device = device;
-    System.err.println("Cyborg initialized with device " + device.getSerialNumber());
-  }
+  public void onDeviceReady(IDevice device);
 }
