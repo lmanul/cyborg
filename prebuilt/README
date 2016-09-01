@@ -1,0 +1,9 @@
+To rebuild ddmlib:
+
+mkdir studio-master-dev && cd studio-master-dev
+repo init -u persistent-https://googleplex-android.git.corp.google.com/platform/manifest -b studio-master-dev && \
+repo sync -c -j16
+cd tools
+./gradlew init publishLocal
+
+You should find a copy of ddmlib jar inside $out/repo
