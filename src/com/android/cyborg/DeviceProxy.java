@@ -52,15 +52,12 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     mAdb.addDeviceChangeListener(this);
   }
 
-  public IDevice getFirstConnectedDevice(DeviceReadyCallback callback) {
+  public void getFirstConnectedDevice(DeviceReadyCallback callback) {
     this.callback = callback;
-    if (mConnectedDevices.size() < 1) {
-      System.err.println("No device connected.");
-      return null;
-    }
     if (mConnectedDevices.size() > 0) {
-      this.callback.onDeviceReady();
+      this.callback.onDeviceReady((IDevice) mConnectedDevices.toArray()[0]);
     }
+    System.err.println("Waiting for a device to connect...");
   }
 
   @Override
@@ -69,6 +66,10 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     System.err.println("Connected " + device + ", now " + mConnectedDevices.size() + " connected devices.");
     System.err.println("Found one device to work with, stop listening.\n\n");
     mAdb.removeDeviceChangeListener(this);
+    if (callback != null) {
+      callback.onDeviceReady(device);
+      callback = null;
+    }
   }
 
   @Override

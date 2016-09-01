@@ -24,7 +24,7 @@ public class Cyborg {
   private static final DeviceProxy deviceProxy;
 
   /** The device paired with this cyborg instance. */
-  private final IDevice device;
+  private IDevice device;
 
   static {
     deviceProxy = DeviceProxy.getInstance();
@@ -32,7 +32,12 @@ public class Cyborg {
 
   public Cyborg() {
     // Empty constructor, assume first connected device.
-    Cyborg(deviceProxy.getFirstConnectedDevice());
+    deviceProxy.getFirstConnectedDevice(new DeviceReadyCallback() {
+      @Override
+      public void onDeviceReady(IDevice device) {
+        Cyborg.this.device = device;
+      }
+    });
   }
 
   public Cyborg(IDevice device) {

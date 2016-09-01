@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package.android.cyborg;
+package com.android.cyborg;
 
 import com.android.ddmlib.IDevice;
 
