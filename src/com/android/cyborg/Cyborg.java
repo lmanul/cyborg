@@ -21,13 +21,13 @@ import com.android.ddmlib.IDevice;
 public class Cyborg {
 
   /** Device proxy to communicate with devices. */
-  private static final DeviceProxy;
+  private static final DeviceProxy deviceProxy;
 
   /** The device paired with this cyborg instance. */
   private final IDevice device;
 
   static {
-    DeviceProxy.getInstance();
+    deviceProxy = DeviceProxy.getInstance();
   }
 
   public Cyborg(IDevice device) {

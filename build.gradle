@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile files('prebuilt/common.jar')
+  compile files('prebuilt/ddmlib.jar')
+  compile group: 'com.google.guava', name: 'guava', version: '19.0'
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/com/android/cyborg/']
+    }
+  }
+}
+
+jar {
+  from {
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
+
