@@ -36,6 +36,7 @@ public class Cyborg {
       @Override
       public void onDeviceReady(IDevice device) {
         Cyborg.this.device = device;
+        System.err.println("Cyborg initialized with device " + device.getSerialNumber());
       }
     });
   }
