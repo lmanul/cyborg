@@ -27,6 +27,7 @@ import java.util.List;
 
 public class CyborgTest {
 
+  private Cyborg cyborg;
 
   public static void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
@@ -55,11 +56,11 @@ public class CyborgTest {
     System.exit(0);
   }
 
-  public static void init(final CyborgTest testObject) {
+  public void init(final CyborgTest testObject) {
     DeviceProxy.getInstance().getFirstConnectedDevice(new DeviceReadyCallback() {
       @Override
       public void onDeviceReady(IDevice device) {
-        // Cyborg cyborg = new Cyborg(device);
+        // this.cyborg = new Cyborg(device);
         runTests(testObject);
       }
     });
