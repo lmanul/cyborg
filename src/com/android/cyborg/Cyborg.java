@@ -30,17 +30,6 @@ public class Cyborg {
     deviceProxy = DeviceProxy.getInstance();
   }
 
-  public Cyborg() {
-    // Empty constructor, assume first connected device.
-    deviceProxy.getFirstConnectedDevice(new DeviceReadyCallback() {
-      @Override
-      public void onDeviceReady(IDevice device) {
-        Cyborg.this.device = device;
-        System.err.println("Cyborg initialized with device " + device.getSerialNumber());
-      }
-    });
-  }
-
   public Cyborg(IDevice device) {
     this.device = device;
     System.err.println("Cyborg initialized with device " + device.getSerialNumber());
