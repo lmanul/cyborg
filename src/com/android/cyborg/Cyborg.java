@@ -34,4 +34,8 @@ public class Cyborg {
     this.device = device;
     System.err.println("Cyborg initialized with device " + device.getSerialNumber());
   }
+
+  public void tapOnObjectWithId(String id) {
+    System.err.println("Tapping on object with ID " + id);
+  }
 }

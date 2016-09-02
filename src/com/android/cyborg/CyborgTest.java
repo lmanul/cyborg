@@ -29,6 +29,14 @@ public class CyborgTest {
 
   private Cyborg cyborg;
 
+  public void setCyborg(Cyborg cyborg) {
+    this.cyborg = cyborg;
+  }
+
+  public void tapOnObjectWithId(String id) {
+    this.cyborg.tapOnObjectWithId(id);
+  }
+
   public static void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
@@ -42,7 +50,6 @@ public class CyborgTest {
     }
     if (testMethods.size() == 0) {
       System.err.println("No test methods detected.");
-      System.exit(0);
     }
 
     for (Method testMethod : testMethods) {
@@ -60,7 +67,7 @@ public class CyborgTest {
     DeviceProxy.getInstance().getFirstConnectedDevice(new DeviceReadyCallback() {
       @Override
       public void onDeviceReady(IDevice device) {
-        // this.cyborg = new Cyborg(device);
+        testObject.setCyborg(new Cyborg(device));
         runTests(testObject);
       }
     });
