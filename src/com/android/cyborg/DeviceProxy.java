@@ -65,11 +65,6 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
   public void deviceConnected(IDevice device) {
     mConnectedDevices.add(device);
     System.err.println("Connected " + device + ", now " + mConnectedDevices.size() + " connected devices.");
-    mAdb.removeDeviceChangeListener(this);
-    if (callback != null) {
-      callback.onDeviceReady(device);
-      callback = null;
-    }
   }
 
   @Override
@@ -82,7 +77,17 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
 
   @Override
   public void deviceChanged(IDevice device, int changeMask) {
-    // Don't do anything.
+    System.err.println("Device changed.");
+    int nClients = getFirstDevice().getClients().length;
+    if (callback != null && nClients > 0) {
+      handleDeviceReady();
+    }
+  }
+
+  private void handleDeviceReady() {
+    mAdb.removeDeviceChangeListener(this);
+    callback.onDeviceReady(getFirstDevice());
+    callback = null;
   }
 
   public IDevice getFirstDevice() {

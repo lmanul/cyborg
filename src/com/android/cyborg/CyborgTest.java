@@ -78,12 +78,24 @@ public class CyborgTest {
         if (tearDown != null) {
           tearDown.invoke(testObject);
         }
+        printPass();
+        System.err.println("");
       } catch (Exception e) {
         System.err.println("Caught exception trying to run test " + e.getCause());
       }
     }
     System.err.println("All done.");
     System.exit(0);
+  }
+
+  private static void printPass() {
+    // Funny escape char business to get some color.
+    System.err.print((char)27 + "[32mPASS" + (char)27 + "[0m");
+  }
+
+  private static void printFail() {
+    // Funny escape char business to get some color.
+    System.err.print((char)27 + "[31mFAIL" + (char)27 + "[0m");
   }
 
   public void init(final CyborgTest testObject) {

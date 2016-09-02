@@ -18,6 +18,11 @@ package com.android.cyborg;
 
 import com.android.ddmlib.IDevice;
 
+import java.awt.Point;
+import java.lang.InterruptedException;
+import java.util.concurrent.TimeUnit;
+import java.util.List;
+
 public class Cyborg {
 
   /** Device proxy to communicate with devices. */
@@ -36,6 +41,17 @@ public class Cyborg {
   }
 
   public void tapOnObjectWithId(String id) {
-    System.err.println("Tapping on object with ID " + id);
+    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithId(device, id);
+    if (rects.size() == 0) {
+      System.err.println("Not found");
+    } else {
+      Point toClick = rects.get(0).getCenter();
+      DeviceProxy.getInstance().runShellCommand("input tap " + toClick.x + " " + toClick.y);
+      // Built-in half-second wait after tapping.
+      try {
+        TimeUnit.MILLISECONDS.sleep(500);
+      } catch (InterruptedException e) {
+      }
+    }
   }
 }
