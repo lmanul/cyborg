@@ -37,24 +37,47 @@ public class CyborgTest {
     this.cyborg.tapOnObjectWithId(id);
   }
 
+  public void setUp() {
+    // Subclasses will override.
+  }
+
+  public void tearDown() {
+    // Subclasses will override.
+  }
+
   public static void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
-    List<Method> testMethods = new ArrayList<>();
+    List<CyborgTestMethod> testMethods = new ArrayList<>();
+    Method setUp = null, tearDown = null;
     for (int i = 0; i < m.length; i++) {
       String methodFullName = m[i].toString();
       String[] dotSeparated = methodFullName.split("[.]");
-      if (dotSeparated[dotSeparated.length - 1].startsWith("test")) {
-        testMethods.add(m[i]);
+      String lastPart = dotSeparated[dotSeparated.length - 1];
+      if (lastPart.startsWith("test")) {
+        testMethods.add(new CyborgTestMethod(m[i], lastPart.substring(0, lastPart.length() - 2)));
+      }
+      if (lastPart.equals("setUp()")) {
+        setUp = m[i];
+      }
+      if (lastPart.equals("tearDown()")) {
+        tearDown = m[i];
       }
     }
     if (testMethods.size() == 0) {
       System.err.println("No test methods detected.");
     }
 
-    for (Method testMethod : testMethods) {
+    for (CyborgTestMethod testMethod : testMethods) {
       try {
-        testMethod.invoke(testObject);
+        System.err.print(testMethod.name + "...");
+        if (setUp != null) {
+          setUp.invoke(testObject);
+        }
+        testMethod.method.invoke(testObject);
+        if (tearDown != null) {
+          tearDown.invoke(testObject);
+        }
       } catch (Exception e) {
         System.err.println("Caught exception trying to run test " + e.getCause());
       }
@@ -71,5 +94,21 @@ public class CyborgTest {
         runTests(testObject);
       }
     });
+  }
+
+  private static class CyborgTestMethod {
+
+    private enum Status {
+      PASS, FAIL;
+    }
+
+    public final Method method;
+    public final String name;
+    public Status status;
+
+    CyborgTestMethod(Method method, String name) {
+      this.method = method;
+      this.name = name;
+    }
   }
 }
