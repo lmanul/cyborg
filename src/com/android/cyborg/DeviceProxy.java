@@ -85,10 +85,6 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     // Don't do anything.
   }
 
-  public Client[] getAllClients() {
-    return getFirstDevice().getClients();
-  }
-
   public IDevice getFirstDevice() {
     return (IDevice) mConnectedDevices.toArray()[0];
   }

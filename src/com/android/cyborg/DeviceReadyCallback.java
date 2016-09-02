@@ -19,6 +19,5 @@ package com.android.cyborg;
 import com.android.ddmlib.IDevice;
 
 public interface DeviceReadyCallback {
-
   public void onDeviceReady(IDevice device);
 }
