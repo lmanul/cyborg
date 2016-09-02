@@ -70,7 +70,7 @@ public class CyborgTest {
 
     for (CyborgTestMethod testMethod : testMethods) {
       try {
-        System.err.print(testMethod.name + "...");
+        System.err.print(testMethod.name + "... ");
         if (setUp != null) {
           setUp.invoke(testObject);
         }
