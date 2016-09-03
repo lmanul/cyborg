@@ -128,7 +128,7 @@ public class ViewHierarchySnapshotter {
         int globalX = root.left;
         int globalY = root.top;
         while (currentParent != null) {
-          // System.err.print(currentParent.id + " -> ");
+          System.err.print(currentParent.id + " -> ");
           float translationX = Float.parseFloat(currentParent.namedProperties.get("drawing:translationX").value);
           float translationY = Float.parseFloat(currentParent.namedProperties.get("drawing:translationY").value);
           // System.err.println("Visibility: " + currentParent.namedProperties.get("misc:visibility").value);
@@ -138,12 +138,12 @@ public class ViewHierarchySnapshotter {
           globalX += translationX;
           globalY += translationY;
           if (currentParent.parent == null) {
-            // System.err.println("Root");
+            System.err.println("Root");
           }
           currentParent = currentParent.parent;
         }
         int x = 0, y = 0, width = 10, height = 10;
-        // System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
+        System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
         foundEls.add(new Rect(globalX, globalY, root.width, root.height));
       } else {
         for (int i = 0; i < root.children.size(); i++) {

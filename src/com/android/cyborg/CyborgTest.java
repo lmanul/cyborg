@@ -43,14 +43,22 @@ public class CyborgTest {
   }
 
   public void assertTrue(boolean condition) {
+    assertTrue(null, condition);
+  }
+
+  public void assertTrue(String message, boolean condition) {
     if (!condition) {
-      fail();
+      fail(message);
     }
   }
 
   public void assertFalse(boolean condition) {
+    assertFalse(null, condition);
+  }
+
+  public void assertFalse(String message, boolean condition) {
     if (condition) {
-      fail();
+      fail(message);
     }
   }
 
@@ -66,7 +74,10 @@ public class CyborgTest {
     // Subclasses will override.
   }
 
-  public void fail() {
+  public void fail(String message) {
+    if (message != null) {
+      System.err.println(message);
+    }
     currentTestMethod.status = CyborgTestMethod.Status.FAIL;
   }
 
