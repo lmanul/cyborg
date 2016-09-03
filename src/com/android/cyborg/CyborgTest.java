@@ -118,12 +118,13 @@ public class CyborgTest {
     System.err.print((char)27 + "[31mFAIL" + (char)27 + "[0m");
   }
 
-  public void init(final CyborgTest testObject) {
+  public void init() {
+    System.err.println(this);
     DeviceProxy.getInstance().getFirstConnectedDevice(new DeviceReadyCallback() {
       @Override
       public void onDeviceReady(IDevice device) {
-        testObject.setCyborg(new Cyborg(device));
-        runTests(testObject);
+        CyborgTest.this.setCyborg(new Cyborg(device));
+        runTests(CyborgTest.this);
       }
     });
   }
