@@ -40,6 +40,11 @@ public class Cyborg {
     System.err.println("Cyborg initialized with device " + device.getSerialNumber());
   }
 
+  public boolean isElementWithIdVisible(String id) {
+    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithId(device, id);
+    return rects.size() > 0;
+  }
+
   public void tapOnObjectWithId(String id) {
     List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithId(device, id);
     if (rects.size() == 0) {

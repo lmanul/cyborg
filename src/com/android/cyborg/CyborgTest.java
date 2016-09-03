@@ -35,7 +35,13 @@ public class CyborgTest {
   }
 
   public void tapOnObjectWithId(String id) {
-    this.cyborg.tapOnObjectWithId(id);
+    cyborg.tapOnObjectWithId(id);
+  }
+
+  public void assertVisibleObjectWithId(String id) {
+    if (!cyborg.isElementWithIdVisible(id)) {
+      fail();
+    }
   }
 
   public void setUp() {
@@ -84,7 +90,11 @@ public class CyborgTest {
         if (tearDown != null) {
           tearDown.invoke(testObject);
         }
-        printPass();
+        if (currentTestMethod.status == CyborgTestMethod.Status.PASS) {
+          printPass();
+        } else {
+          printFail();
+        }
         System.err.println("");
       } catch (Exception e) {
         System.err.println("Caught exception trying to run test " + e.getCause());
