@@ -38,8 +38,12 @@ public class CyborgTest {
     cyborg.tapOnObjectWithId(id);
   }
 
+  public boolean hasVisibleObjectWithId(String id) {
+    return cyborg.isElementWithIdVisible(id);
+  }
+
   public void assertVisibleObjectWithId(String id) {
-    if (!cyborg.isElementWithIdVisible(id)) {
+    if (!hasVisibleObjectWithId(id)) {
       fail();
     }
   }
