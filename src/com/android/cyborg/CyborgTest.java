@@ -119,7 +119,6 @@ public class CyborgTest {
   }
 
   public void init() {
-    System.err.println(this);
     DeviceProxy.getInstance().getFirstConnectedDevice(new DeviceReadyCallback() {
       @Override
       public void onDeviceReady(IDevice device) {
