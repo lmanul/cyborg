@@ -117,6 +117,10 @@ public class ViewHierarchySnapshotter {
       if (root == null) {
         return;
       }
+      if (!viewIsVisible(root)) {
+        // System.err.println("View is not visible, stopping here: " + root.id);
+        return;
+      }
       if (root.id != null && root.id.equals("id/" + searchId)) {
         //System.err.println("\nFound " + root + " with parent " + root.parent + "\n");
         //System.err.println("" + root.left + ":" + root.top + ":" + root.width + ":" + root.height);
@@ -124,17 +128,23 @@ public class ViewHierarchySnapshotter {
         int globalX = root.left;
         int globalY = root.top;
         while (currentParent != null) {
+          System.err.print(currentParent.id + " -> ");
           float translationX = Float.parseFloat(currentParent.namedProperties.get("drawing:translationX").value);
           float translationY = Float.parseFloat(currentParent.namedProperties.get("drawing:translationY").value);
+          // System.err.println("Visibility: " + currentParent.namedProperties.get("misc:visibility").value);
 
           globalX += currentParent.left;
           globalY += currentParent.top;
           globalX += translationX;
           globalY += translationY;
+          if (currentParent.parent == null) {
+            // System.err.println(currentParent.namedProperties);
+            System.err.println("Root");
+          }
           currentParent = currentParent.parent;
         }
         int x = 0, y = 0, width = 10, height = 10;
-        //System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
+        // System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
         foundEls.add(new Rect(globalX, globalY, root.width, root.height));
       } else {
         for (int i = 0; i < root.children.size(); i++) {
@@ -142,6 +152,11 @@ public class ViewHierarchySnapshotter {
         }
       }
     }
+  }
+
+  private static boolean viewIsVisible(ViewNode node) {
+    int visibility = Integer.parseInt(node.namedProperties.get("misc:visibility").value);
+    return visibility == 0;
   }
 
   /**

@@ -46,6 +46,7 @@ public class Cyborg {
       System.err.println("Not found");
     } else {
       Point toClick = rects.get(0).getCenter();
+      System.err.println("Tap on (" + toClick.x + ", " + toClick.y + ")");
       DeviceProxy.getInstance().runShellCommand("input tap " + toClick.x + " " + toClick.y);
       // Built-in half-second wait after tapping.
       try {

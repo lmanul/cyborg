@@ -28,6 +28,7 @@ import java.util.List;
 public class CyborgTest {
 
   private Cyborg cyborg;
+  private CyborgTestMethod currentTestMethod;
 
   public void setCyborg(Cyborg cyborg) {
     this.cyborg = cyborg;
@@ -45,7 +46,11 @@ public class CyborgTest {
     // Subclasses will override.
   }
 
-  public static void runTests(CyborgTest testObject) {
+  public void fail() {
+    currentTestMethod.status = CyborgTestMethod.Status.FAIL;
+  }
+
+  public void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
     List<CyborgTestMethod> testMethods = new ArrayList<>();
@@ -69,6 +74,7 @@ public class CyborgTest {
     }
 
     for (CyborgTestMethod testMethod : testMethods) {
+      currentTestMethod = testMethod;
       try {
         System.err.print(testMethod.name + "... ");
         if (setUp != null) {
@@ -121,6 +127,7 @@ public class CyborgTest {
     CyborgTestMethod(Method method, String name) {
       this.method = method;
       this.name = name;
+      this.status = Status.PASS;
     }
   }
 }
