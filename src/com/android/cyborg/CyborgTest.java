@@ -42,10 +42,20 @@ public class CyborgTest {
     return cyborg.isElementWithIdVisible(id);
   }
 
-  public void assertVisibleObjectWithId(String id) {
-    if (!hasVisibleObjectWithId(id)) {
+  public void assertTrue(boolean condition) {
+    if (!condition) {
       fail();
     }
+  }
+
+  public void assertFalse(boolean condition) {
+    if (condition) {
+      fail();
+    }
+  }
+
+  public void pressHome() {
+    cyborg.pressHome();
   }
 
   public void setUp() {

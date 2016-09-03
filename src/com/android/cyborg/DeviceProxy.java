@@ -94,6 +94,10 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     return (IDevice) mConnectedDevices.toArray()[0];
   }
 
+  public void pressHome() {
+    runShellCommand("input keyevent KEYCODE_HOME");
+  }
+
   public void runShellCommand(String command) {
     try {
       getFirstDevice().executeShellCommand(command, this);
