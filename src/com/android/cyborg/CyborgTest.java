@@ -34,12 +34,12 @@ public class CyborgTest {
     this.cyborg = cyborg;
   }
 
-  public void tapOnObjectWithId(String id) {
-    cyborg.tapOnObjectWithId(id);
+  public void tapOnObjectWithFilter(Filter filter) {
+    cyborg.tapOnObjectWithFilter(filter);
   }
 
-  public boolean hasVisibleObjectWithId(String id) {
-    return cyborg.isElementWithIdVisible(id);
+  public boolean hasVisibleObjectWithFilter(Filter filter) {
+    return cyborg.isElementWithFilterVisible(filter);
   }
 
   public void assertTrue(boolean condition) {

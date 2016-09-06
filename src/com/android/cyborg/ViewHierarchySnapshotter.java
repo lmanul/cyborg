@@ -50,7 +50,7 @@ public class ViewHierarchySnapshotter {
   private static final String MEASURED_WIDTH_KEY = "measurement:mMeasuredWidth";
   private static final String MEASURED_HEIGHT_KEY = "measurement:mMeasuredHeight";
 
-  public static List<Rect> getRectsForElementsWithId(IDevice device, final String searchString) {
+  public static List<Rect> getRectsForElementsWithFilter(IDevice device, final Filter filter) {
     // System.err.println("Searching view hierarchy for " + searchString + " on device " + device.getSerialNumber() + "...");
     Client[] allClients = device.getClients();
     ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -63,7 +63,7 @@ public class ViewHierarchySnapshotter {
         try {
           List<String> windowTitles = new ListViewRootsHandler().getWindows(c, 5, TimeUnit.SECONDS);
           for (final String windowTitle : windowTitles) {
-            callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), searchString));
+            callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), filter));
           }
         } catch (IOException ignored) { }
       } else {
@@ -96,24 +96,24 @@ public class ViewHierarchySnapshotter {
   }
 
   private static class HierarchyExplorerCallable implements Callable<List<Rect>> {
-    private final String searchId;
+    private final Filter filter;
     private final Client client;
     private final String windowTitle;
     private final List<Rect> foundEls = new ArrayList<>();
 
-    public  HierarchyExplorerCallable(Window window, String searchId) {
+    public  HierarchyExplorerCallable(Window window, Filter filter) {
       this.client = window.getClient();
       this.windowTitle = window.getTitle();
-      this.searchId = searchId;
+      this.filter = filter;
     }
 
     public List<Rect> call() {
       ViewNode root = loadWindowData(20, TimeUnit.SECONDS, new Window(windowTitle, client));
-      recursivelySearchForId(root, searchId);
+      recursivelySearchWithFilter(root, filter);
       return foundEls;
     }
 
-    public void recursivelySearchForId(ViewNode root, String searchId) {
+    public void recursivelySearchWithFilter(ViewNode root, Filter filter) {
       if (root == null) {
         return;
       }
@@ -121,7 +121,7 @@ public class ViewHierarchySnapshotter {
         // System.err.println("View is not visible, stopping here: " + root.id);
         return;
       }
-      if (root.id != null && root.id.equals("id/" + searchId)) {
+      if (filter.apply(root)) {
         //System.err.println("\nFound " + root + " with parent " + root.parent + "\n");
         //System.err.println("" + root.left + ":" + root.top + ":" + root.width + ":" + root.height);
         ViewNode currentParent = root.parent;
@@ -147,7 +147,7 @@ public class ViewHierarchySnapshotter {
         foundEls.add(new Rect(globalX, globalY, root.width, root.height));
       } else {
         for (int i = 0; i < root.children.size(); i++) {
-          recursivelySearchForId(root.children.get(i), searchId);
+          recursivelySearchWithFilter(root.children.get(i), filter);
         }
       }
     }

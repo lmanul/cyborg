@@ -44,13 +44,13 @@ public class Cyborg {
     deviceProxy.pressHome();
   }
 
-  public boolean isElementWithIdVisible(String id) {
-    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithId(device, id);
+  public boolean isElementWithFilterVisible(Filter filter) {
+    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
     return rects.size() > 0;
   }
 
-  public void tapOnObjectWithId(String id) {
-    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithId(device, id);
+  public void tapOnObjectWithFilter(Filter filter) {
+    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
     if (rects.size() == 0) {
       System.err.println("Not found");
     } else {
