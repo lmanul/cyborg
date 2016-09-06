@@ -28,4 +28,14 @@ public abstract class Filter {
       }
     };
   }
+
+  public static Filter withContentDescriptionEnd(String text) {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        String description = node.namedProperties.get("accessibility:contentDescription").value;
+        return description != null && description.endsWith(text);
+      }
+    };
+  }
 }
