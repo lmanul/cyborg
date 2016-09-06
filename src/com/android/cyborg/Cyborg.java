@@ -49,6 +49,10 @@ public class Cyborg {
     return rects.size() > 0;
   }
 
+  public List<Rect> getRectsForObjectsWithFilter(Filter filter) {
+    return ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
+  }
+
   public void tapOnObjectWithFilter(Filter filter) {
     List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
     if (rects.size() == 0) {

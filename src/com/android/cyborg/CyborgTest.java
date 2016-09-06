@@ -34,6 +34,10 @@ public class CyborgTest {
     this.cyborg = cyborg;
   }
 
+  public List<Rect> getRectsForObjectsWithFilter(Filter filter) {
+    return cyborg.getRectsForObjectsWithFilter(filter);
+  }
+
   public void tapOnObjectWithFilter(Filter filter) {
     cyborg.tapOnObjectWithFilter(filter);
   }
