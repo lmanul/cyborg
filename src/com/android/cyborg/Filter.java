@@ -26,6 +26,11 @@ public abstract class Filter {
       public boolean apply(ViewNode node) {
         return (node.id != null) && (node.id.equals("id/" + id));
       }
+
+      @Override
+      public String toString() {
+        return "<Filter for id='" + id + "'>";
+      }
     };
   }
 
@@ -34,7 +39,29 @@ public abstract class Filter {
       @Override
       public boolean apply(ViewNode node) {
         String description = node.namedProperties.get("accessibility:contentDescription").value;
+        if (description != null && description.endsWith(text)) {
+          System.err.println("Matching for: " + description + " and id " + node.id);
+        }
         return description != null && description.endsWith(text);
+      }
+
+      @Override
+      public String toString() {
+        return "<Filter for contentDesc='..." + text + "'>";
+      }
+    };
+  }
+
+  public static Filter and(Filter... filters) {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        for (int i = 0; i < filters.length; i++) {
+          if (!filters[i].apply(node)) {
+            return false;
+          }
+        }
+        return true;
       }
     };
   }

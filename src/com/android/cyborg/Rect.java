@@ -31,4 +31,9 @@ public class Rect {
   public Point getCenter() {
     return new Point(x + (w / 2), y + (h / 2));
   }
+
+  @Override
+  public String toString() {
+    return "<Rect (" + x + ", " + y + ") w=" + w + " h=" + h + ">";
+  }
 }

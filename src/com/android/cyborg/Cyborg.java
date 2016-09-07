@@ -61,16 +61,11 @@ public class Cyborg {
     return ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
   }
 
-  public void tapOnObjectWithFilter(Filter filter) {
-    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
-    if (rects.size() == 0) {
-      System.err.println("Not found");
-    } else {
-      Point toClick = rects.get(0).getCenter();
-      // System.err.println("Tap on (" + toClick.x + ", " + toClick.y + ")");
-      DeviceProxy.getInstance().runShellCommand("input tap " + toClick.x + " " + toClick.y);
-      // Built-in half-second wait after tapping.
-      onAfterUserInteraction();
-    }
+  public void tapOnRect(Rect rect) {
+    Point toClick = rect.getCenter();
+    // System.err.println("Tap on (" + toClick.x + ", " + toClick.y + ")");
+    DeviceProxy.getInstance().runShellCommand("input tap " + toClick.x + " " + toClick.y);
+    // Built-in half-second wait after tapping.
+    onAfterUserInteraction();
   }
 }

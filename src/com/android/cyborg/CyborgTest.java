@@ -39,7 +39,19 @@ public class CyborgTest {
   }
 
   public void tapOnObjectWithFilter(Filter filter) {
-    cyborg.tapOnObjectWithFilter(filter);
+    List<Rect> rects = cyborg.getRectsForObjectsWithFilter(filter);
+    if (rects.size() == 0) {
+      fail("Can't find object to tap on for " + filter);
+      return;
+    } else if (rects.size() > 1) {
+      fail("Found " + rects.size() + " objects to tap on for " + filter);
+      int i = 1;
+      for (Rect rect : rects) {
+        System.err.println("Object " + (i++) + " located at " + rect);
+      }
+      return;
+    }
+    cyborg.tapOnRect(rects.get(0));
   }
 
   public boolean hasVisibleObjectWithFilter(Filter filter) {
