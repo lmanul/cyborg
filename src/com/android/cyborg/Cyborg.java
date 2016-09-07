@@ -50,11 +50,15 @@ public class Cyborg {
     onAfterUserInteraction();
   }
 
-  public void onAfterUserInteraction() {
+  public void wait(int milliseconds) {
     try {
-      TimeUnit.MILLISECONDS.sleep(300);
+      TimeUnit.MILLISECONDS.sleep(milliseconds);
     } catch (InterruptedException e) {
     }
+  }
+
+  public void onAfterUserInteraction() {
+    wait(300);
   }
 
   public boolean isElementWithFilterVisible(Filter filter) {

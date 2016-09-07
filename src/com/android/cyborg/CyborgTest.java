@@ -92,6 +92,10 @@ public class CyborgTest {
     cyborg.pressKeyWithCode(keyCode);
   }
 
+  public void wait(int milliseconds) {
+    cyborg.wait(milliseconds);
+  }
+
   public void setUp() {
     // Subclasses will override.
   }
