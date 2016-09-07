@@ -120,6 +120,7 @@ public class CyborgTest {
       System.err.println("No test methods detected.");
     }
 
+    System.err.println("\n");
     for (CyborgTestMethod testMethod : testMethods) {
       currentTestMethod = testMethod;
       try {
@@ -141,7 +142,7 @@ public class CyborgTest {
         System.err.println("Caught exception trying to run test " + e.getCause());
       }
     }
-    System.err.println("All done.");
+    System.err.println("\nAll done.");
     System.exit(0);
   }
 

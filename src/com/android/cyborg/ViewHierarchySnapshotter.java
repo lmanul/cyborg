@@ -113,6 +113,33 @@ public class ViewHierarchySnapshotter {
       return foundEls;
     }
 
+    private Rect findVisibleRect(ViewNode root) {
+      // System.err.println("\nFound " + root + " with parent " + root.parent + "\n");
+      // System.err.println("" + root.left + ":" + root.top + ":" + root.width + ":" + root.height);
+      ViewNode currentParent = root.parent;
+      int globalX = root.left;
+      int globalY = root.top;
+      // System.err.print(root.id + " (vis = " + root.namedProperties.get("misc:visibility").value + ") -> ");
+      while (currentParent != null) {
+        // System.err.print(currentParent.id + " (vis = " + currentParent.namedProperties.get("misc:visibility").value + ") -> ");
+        float translationX = Float.parseFloat(currentParent.namedProperties.get("drawing:translationX").value);
+        float translationY = Float.parseFloat(currentParent.namedProperties.get("drawing:translationY").value);
+        // System.err.println("Visibility: " + currentParent.namedProperties.get("misc:visibility").value);
+
+        globalX += currentParent.left;
+        globalY += currentParent.top;
+        globalX += translationX;
+        globalY += translationY;
+        /* if (currentParent.parent == null) {
+          System.err.println("Root");
+        } */
+        currentParent = currentParent.parent;
+      }
+      int x = 0, y = 0, width = 10, height = 10;
+      // System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
+      return new Rect(globalX, globalY, root.width, root.height);
+    }
+
     public void recursivelySearchWithFilter(ViewNode root, Filter filter) {
       if (root == null) {
         return;
@@ -122,29 +149,8 @@ public class ViewHierarchySnapshotter {
         return;
       }
       if (filter.apply(root)) {
-        //System.err.println("\nFound " + root + " with parent " + root.parent + "\n");
-        //System.err.println("" + root.left + ":" + root.top + ":" + root.width + ":" + root.height);
-        ViewNode currentParent = root.parent;
-        int globalX = root.left;
-        int globalY = root.top;
-        while (currentParent != null) {
-          // System.err.print(currentParent.id + " -> ");
-          float translationX = Float.parseFloat(currentParent.namedProperties.get("drawing:translationX").value);
-          float translationY = Float.parseFloat(currentParent.namedProperties.get("drawing:translationY").value);
-          // System.err.println("Visibility: " + currentParent.namedProperties.get("misc:visibility").value);
-
-          globalX += currentParent.left;
-          globalY += currentParent.top;
-          globalX += translationX;
-          globalY += translationY;
-          // if (currentParent.parent == null) {
-            // System.err.println("Root");
-          // }
-          currentParent = currentParent.parent;
-        }
-        int x = 0, y = 0, width = 10, height = 10;
-        // System.err.println("Coords: " + globalX + "," + globalY + " " + root.width + "x" + root.height + "\n");
-        foundEls.add(new Rect(globalX, globalY, root.width, root.height));
+        //printParentBounds(root);
+        foundEls.add(findVisibleRect(root));
       } else {
         for (int i = 0; i < root.children.size(); i++) {
           recursivelySearchWithFilter(root.children.get(i), filter);
@@ -153,9 +159,20 @@ public class ViewHierarchySnapshotter {
     }
   }
 
+  private static void printParentBounds(ViewNode node) {
+    ViewNode currentParent = node.parent;
+    while (currentParent != null) {
+      System.err.println(String.join(", ", "" + currentParent.left, "" + currentParent.top, "" + currentParent.width, "" + currentParent.height));
+      currentParent = currentParent.parent;
+    }
+  }
+
   private static boolean viewIsVisible(ViewNode node) {
     int visibility = Integer.parseInt(node.namedProperties.get("misc:visibility").value);
-    return visibility == 0;
+    if (visibility != 0 /* View.VISIBLE */) {
+      return false;
+    }
+    return true;
   }
 
   /**
