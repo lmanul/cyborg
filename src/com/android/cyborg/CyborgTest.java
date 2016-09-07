@@ -63,6 +63,9 @@ public class CyborgTest {
   }
 
   public void assertTrue(String message, boolean condition) {
+    if (message == null || message.isEmpty()) {
+      message = "Called assertTrue with false argument.";
+    }
     if (!condition) {
       fail(message);
     }
@@ -73,6 +76,9 @@ public class CyborgTest {
   }
 
   public void assertFalse(String message, boolean condition) {
+    if (message == null || message.isEmpty()) {
+      message = "Called assertFalse with true argument.";
+    }
     if (condition) {
       fail(message);
     }
@@ -80,6 +86,10 @@ public class CyborgTest {
 
   public void pressHome() {
     cyborg.pressHome();
+  }
+
+  public void pressKeyWithCode(int keyCode) {
+    cyborg.pressKeyWithCode(keyCode);
   }
 
   public void setUp() {
@@ -102,12 +112,15 @@ public class CyborgTest {
     Method[] m = clazz.getDeclaredMethods();
     List<CyborgTestMethod> testMethods = new ArrayList<>();
     Method setUp = null, tearDown = null;
+    int longestMethodNameLength = 0;
     for (int i = 0; i < m.length; i++) {
       String methodFullName = m[i].toString();
       String[] dotSeparated = methodFullName.split("[.]");
       String lastPart = dotSeparated[dotSeparated.length - 1];
       if (lastPart.startsWith("test")) {
-        testMethods.add(new CyborgTestMethod(m[i], lastPart.substring(0, lastPart.length() - 2)));
+        String methodName = lastPart.substring(0, lastPart.length() - 2);
+        longestMethodNameLength = java.lang.Math.max(longestMethodNameLength, methodName.length());
+        testMethods.add(new CyborgTestMethod(m[i], methodName));
       }
       if (lastPart.equals("setUp()")) {
         setUp = m[i];
@@ -124,7 +137,11 @@ public class CyborgTest {
     for (CyborgTestMethod testMethod : testMethods) {
       currentTestMethod = testMethod;
       try {
-        System.err.print(testMethod.name + "... ");
+        StringBuilder sb = new StringBuilder(testMethod.name + "...");
+        for (int i = testMethod.name.length(); i <= longestMethodNameLength; i++) {
+          sb.append(" ");
+        }
+        System.err.print(sb.toString());
         if (setUp != null) {
           setUp.invoke(testObject);
         }

@@ -45,9 +45,14 @@ public class Cyborg {
     onAfterUserInteraction();
   }
 
+  public void pressKeyWithCode(int keyCode) {
+    DeviceProxy.getInstance().runShellCommand("input keyevent " + keyCode);
+    onAfterUserInteraction();
+  }
+
   public void onAfterUserInteraction() {
     try {
-      TimeUnit.MILLISECONDS.sleep(500);
+      TimeUnit.MILLISECONDS.sleep(300);
     } catch (InterruptedException e) {
     }
   }

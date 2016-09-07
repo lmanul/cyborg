@@ -49,6 +49,16 @@ public abstract class Filter {
     };
   }
 
+  public static Filter withText(String searchText) {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        String text = node.namedProperties.get("text:text").value;
+        return text.equals(searchText);
+      }
+    };
+  }
+
   public static Filter clickable() {
     return new Filter() {
       @Override
