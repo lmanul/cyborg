@@ -67,6 +67,10 @@ public class Cyborg {
     return nodes.size() > 0;
   }
 
+  public List<ViewNode> getNodesForObjectsWithFilter(Filter filter) {
+    return ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+  }
+
   public List<Rect> getRectsForObjectsWithFilter(Filter filter) {
     List<Rect> rects = new ArrayList<>();
     List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);

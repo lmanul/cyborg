@@ -63,9 +63,15 @@ public class CyborgTest {
     return cyborg.isElementWithFilterVisible(filter);
   }
 
-  /* public String getTextForObjectWithFilter(Filter filter) {
-    
-  } */
+  public String getTextForObjectWithFilter(Filter filter) {
+    List<ViewNode> nodes = cyborg.getNodesForObjectsWithFilter(filter);
+    if (nodes.size() != 1) {
+      fail("Was expecting exactly one object, but found " + nodes.size());
+      return null;
+    }
+    ViewNode node = nodes.get(0);
+    return node.namedProperties.get("text:text").value;
+  }
 
   public void assertTrue(boolean condition) {
     assertTrue(null, condition);
