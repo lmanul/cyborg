@@ -50,7 +50,7 @@ public class ViewHierarchySnapshotter {
   private static final String MEASURED_WIDTH_KEY = "measurement:mMeasuredWidth";
   private static final String MEASURED_HEIGHT_KEY = "measurement:mMeasuredHeight";
 
-  public static List<ViewNode> getNodesForElementsWithFilter(IDevice device, final Filter filter) {
+  public static List<ViewNode> getNodesForFilter(IDevice device, final Filter filter) {
     // System.err.println("Searching view hierarchy for " + searchString + " on device " + device.getSerialNumber() + "...");
     Client[] allClients = device.getClients();
     ExecutorService executorService = Executors.newFixedThreadPool(10);

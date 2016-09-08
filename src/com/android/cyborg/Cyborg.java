@@ -63,17 +63,17 @@ public class Cyborg {
   }
 
   public boolean isElementWithFilterVisible(Filter filter) {
-    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForFilter(device, filter);
     return nodes.size() > 0;
   }
 
   public List<ViewNode> getNodesForObjectsWithFilter(Filter filter) {
-    return ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+    return ViewHierarchySnapshotter.getNodesForFilter(device, filter);
   }
 
   public List<Rect> getRectsForObjectsWithFilter(Filter filter) {
     List<Rect> rects = new ArrayList<>();
-    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForFilter(device, filter);
     for (ViewNode node : nodes) {
       rects.add(ViewHierarchySnapshotter.findVisibleRect(node));
     }
