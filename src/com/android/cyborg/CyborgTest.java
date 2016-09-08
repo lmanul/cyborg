@@ -20,7 +20,8 @@ import com.android.cyborg.DeviceProxy;
 import com.android.cyborg.DeviceReadyCallback;
 import com.android.ddmlib.IDevice;
 
-// import java.lang.reflect.Class;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,10 @@ public class CyborgTest {
     return cyborg.getRectsForObjectsWithFilter(filter);
   }
 
+  public void tapOnRect(Rect rect) {
+    cyborg.tapOnRect(rect);
+  }
+
   public void tapOnObjectWithFilter(Filter filter) {
     List<Rect> rects = cyborg.getRectsForObjectsWithFilter(filter);
     if (rects.size() == 0) {
@@ -51,12 +56,16 @@ public class CyborgTest {
       }
       return;
     }
-    cyborg.tapOnRect(rects.get(0));
+    tapOnRect(rects.get(0));
   }
 
   public boolean hasVisibleObjectWithFilter(Filter filter) {
     return cyborg.isElementWithFilterVisible(filter);
   }
+
+  /* public String getTextForObjectWithFilter(Filter filter) {
+    
+  } */
 
   public void assertTrue(boolean condition) {
     assertTrue(null, condition);
@@ -109,6 +118,10 @@ public class CyborgTest {
       System.err.println(message);
     }
     currentTestMethod.status = CyborgTestMethod.Status.FAIL;
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    new RuntimeException("").printStackTrace(pw);
+    System.err.println(sw.toString());
   }
 
   public void runTests(CyborgTest testObject) {

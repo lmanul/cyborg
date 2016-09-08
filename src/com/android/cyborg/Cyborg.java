@@ -21,6 +21,7 @@ import com.android.ddmlib.IDevice;
 import java.awt.Point;
 import java.lang.InterruptedException;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cyborg {
@@ -62,12 +63,17 @@ public class Cyborg {
   }
 
   public boolean isElementWithFilterVisible(Filter filter) {
-    List<Rect> rects = ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
-    return rects.size() > 0;
+    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+    return nodes.size() > 0;
   }
 
   public List<Rect> getRectsForObjectsWithFilter(Filter filter) {
-    return ViewHierarchySnapshotter.getRectsForElementsWithFilter(device, filter);
+    List<Rect> rects = new ArrayList<>();
+    List<ViewNode> nodes = ViewHierarchySnapshotter.getNodesForElementsWithFilter(device, filter);
+    for (ViewNode node : nodes) {
+      rects.add(ViewHierarchySnapshotter.findVisibleRect(node));
+    }
+    return rects;
   }
 
   public void tapOnRect(Rect rect) {

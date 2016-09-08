@@ -24,7 +24,7 @@ public abstract class Filter {
     return new Filter() {
       @Override
       public boolean apply(ViewNode node) {
-        return (node.id != null) && (node.id.equals("id/" + id));
+        return idEquals(node, id);
       }
 
       @Override
@@ -84,6 +84,15 @@ public abstract class Filter {
     };
   }
 
+  public static Filter withParentWithId(String id) {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        return node.parent != null && idEquals(node.parent, id);
+      }
+    };
+  }
+
   public static Filter and(Filter... filters) {
     return new Filter() {
       @Override
@@ -110,5 +119,9 @@ public abstract class Filter {
         return false;
       }
     };
+  }
+
+  private static boolean idEquals(ViewNode node, String id) {
+    return node.id != null && node.id.equals("id/" + id);
   }
 }
