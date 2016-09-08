@@ -134,16 +134,20 @@ public class CyborgTest {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
     List<CyborgTestMethod> testMethods = new ArrayList<>();
+    CyborgTestMethod soloTestMethod = null;
     Method setUp = null, tearDown = null;
     int longestMethodNameLength = 0;
     for (int i = 0; i < m.length; i++) {
       String methodFullName = m[i].toString();
       String[] dotSeparated = methodFullName.split("[.]");
       String lastPart = dotSeparated[dotSeparated.length - 1];
-      if (lastPart.startsWith("test")) {
-        String methodName = lastPart.substring(0, lastPart.length() - 2);
+      String methodName = lastPart.substring(0, lastPart.length() - 2);
+      if (methodName.startsWith("test")) {
         longestMethodNameLength = java.lang.Math.max(longestMethodNameLength, methodName.length());
         testMethods.add(new CyborgTestMethod(m[i], methodName));
+      }
+      if (methodName.startsWith("solotest")) {
+        soloTestMethod = new CyborgTestMethod(m[i], methodName.substring(4));
       }
       if (lastPart.equals("setUp()")) {
         setUp = m[i];
@@ -152,10 +156,14 @@ public class CyborgTest {
         tearDown = m[i];
       }
     }
-    if (testMethods.size() == 0) {
+    if (testMethods.size() == 0 && soloTestMethod == null) {
       System.err.println("No test methods detected.");
     }
 
+    if (soloTestMethod != null) {
+      testMethods = new ArrayList<>();
+      testMethods.add(soloTestMethod);
+    }
     System.err.println("\n");
     for (CyborgTestMethod testMethod : testMethods) {
       currentTestMethod = testMethod;
