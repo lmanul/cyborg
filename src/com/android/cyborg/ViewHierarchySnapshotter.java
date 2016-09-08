@@ -45,11 +45,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ViewHierarchySnapshotter {
 
-  private static final String LOCATION_ON_SCREEN_X_KEY = "layout:getLocationOnScreen_x()";
-  private static final String LOCATION_ON_SCREEN_Y_KEY = "layout:getLocationOnScreen_y()";
-  private static final String MEASURED_WIDTH_KEY = "measurement:mMeasuredWidth";
-  private static final String MEASURED_HEIGHT_KEY = "measurement:mMeasuredHeight";
-
   public static List<ViewNode> getNodesForFilter(IDevice device, final Filter filter) {
     // System.err.println("Searching view hierarchy for " + searchString + " on device " + device.getSerialNumber() + "...");
     Client[] allClients = device.getClients();
