@@ -46,7 +46,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ViewHierarchySnapshotter {
 
   public static List<ViewNode> getNodesForFilter(IDevice device, final Filter filter) {
-    // System.err.println("Searching view hierarchy for " + searchString + " on device " + device.getSerialNumber() + "...");
     Client[] allClients = device.getClients();
     ExecutorService executorService = Executors.newFixedThreadPool(10);
     List<Callable<List<ViewNode>>> callables = new ArrayList<>();
@@ -61,8 +60,6 @@ public class ViewHierarchySnapshotter {
             callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), filter));
           }
         } catch (IOException ignored) { }
-      } else {
-        // System.err.println("No view hierarchy feature");
       }
     }
 
@@ -83,22 +80,38 @@ public class ViewHierarchySnapshotter {
       System.err.println(sw.toString());
     }
 
-    // System.err.println("Finished searching, found " + foundRects.size() + " elements.");
-    
     executorService.shutdown();
-
     return foundRects;
   }
 
-   public static Rect findVisibleRect(ViewNode root) {
-    // System.err.println("\nFound " + root + " with parent " + root.parent + "\n");
-    // System.err.println("" + root.left + ":" + root.top + ":" + root.width + ":" + root.height);
+  public static String getAllAvailableLayoutInfo(ViewNode node) {
+    return "(" +
+        "l=" + node.left + " " +
+        "t=" + node.top + " " +
+        "b=" + node.namedProperties.get("layout:bottom").value + " " +
+        "r=" + node.namedProperties.get("layout:right").value + " " +
+        "w=" + node.width + " " +
+        "h=" + node.height + " " +
+        "tX=" + node.translationX + " " +
+        "tY=" + node.translationY + " " +
+        "tZ=" + node.namedProperties.get("drawing:translationZ").value + " " +
+        "sX=" + node.scrollX + " " +
+        "sY=" + node.scrollY + " " +
+        "r=" + node.namedProperties.get("drawing:rotation").value + " " +
+        "rX=" + node.namedProperties.get("drawing:rotationX").value + " " +
+        "rY=" + node.namedProperties.get("drawing:rotationY").value + " " +
+        "sX=" + node.namedProperties.get("drawing:scaleX").value + " " +
+        "sY=" + node.namedProperties.get("drawing:scaleY").value + " " +
+        ")";
+  }
+
+  public static Rect findVisibleRect(ViewNode root) {
     ViewNode currentParent = root.parent;
     int globalX = root.left;
     int globalY = root.top;
-    // System.err.print(root.id + " (vis = " + root.namedProperties.get("misc:visibility").value + ") -> ");
+    // System.err.println(root.id + " " + getAllAvailableLayoutInfo(root));
     while (currentParent != null) {
-      // System.err.print(currentParent.id + " (vis = " + currentParent.namedProperties.get("misc:visibility").value + ") -> ");
+      // System.err.println(currentParent.id + " " + getAllAvailableLayoutInfo(currentParent));
       float translationX = Float.parseFloat(currentParent.namedProperties.get("drawing:translationX").value);
       float translationY = Float.parseFloat(currentParent.namedProperties.get("drawing:translationY").value);
       // System.err.println("Visibility: " + currentParent.namedProperties.get("misc:visibility").value);
@@ -140,25 +153,15 @@ public class ViewHierarchySnapshotter {
         return;
       }
       if (!viewIsVisible(root)) {
-        // System.err.println("View is not visible, stopping here: " + root.id);
         return;
       }
       if (filter.apply(root)) {
-        //printParentBounds(root);
         foundEls.add(root);
       } else {
         for (int i = 0; i < root.children.size(); i++) {
           recursivelySearchWithFilter(root.children.get(i), filter);
         }
       }
-    }
-  }
-
-  private static void printParentBounds(ViewNode node) {
-    ViewNode currentParent = node.parent;
-    while (currentParent != null) {
-      System.err.println(String.join(", ", "" + currentParent.left, "" + currentParent.top, "" + currentParent.width, "" + currentParent.height));
-      currentParent = currentParent.parent;
     }
   }
 
