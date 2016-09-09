@@ -143,7 +143,7 @@ public class ViewHierarchySnapshotter {
     }
 
     public List<ViewNode> call() {
-      ViewNode root = loadWindowData(20, TimeUnit.SECONDS, new Window(windowTitle, client));
+      ViewNode root = loadWindowData(15, TimeUnit.SECONDS, new Window(windowTitle, client));
       recursivelySearchWithFilter(root, filter);
       return foundEls;
     }
@@ -195,7 +195,10 @@ public class ViewHierarchySnapshotter {
       return null;
     }
 
-    byte[] data = handler.getData(30, TimeUnit.SECONDS);
+    byte[] data = handler.getData(20, TimeUnit.SECONDS);
+    if (data == null) {
+      return null;
+    }
 
     ViewNode viewNode = parseViewHierarchy(data, window);
 
@@ -206,6 +209,9 @@ public class ViewHierarchySnapshotter {
   }
 
   private static ViewNode parseViewHierarchy(byte[] data, Window window) {
+    if (data == null) {
+      return null;
+    }
     if (isEncoded(data)) {
       ViewDumpParser parser = new ViewDumpParser();
       parser.parse(data);
@@ -279,7 +285,7 @@ public class ViewHierarchySnapshotter {
   }
 
   private static boolean isEncoded(byte[] data) {
-    return data[0] == 'M';
+    return data != null && data[0] == 'M';
   }
 
   private void addAll(ViewNode node, SortedMultiset<String> set, Map<String, ViewNode> props) {

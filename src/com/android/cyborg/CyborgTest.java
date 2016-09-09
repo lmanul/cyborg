@@ -23,6 +23,7 @@ import com.android.ddmlib.IDevice;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,39 @@ public class CyborgTest {
       return;
     }
     tapOnRect(rects.get(0));
+  }
+
+  public void waitUntilObjectIsVisible(Filter filter, int timeout) {
+    waitUntilObjectIsVisible(filter, timeout, true);
+  }
+
+  public void waitUntilObjectIsHidden(Filter filter, int timeout) {
+    waitUntilObjectIsVisible(filter, timeout, false);
+  }
+
+  public void waitUntilObjectIsVisible(Filter filter, int timeout, boolean visible) {
+    if ((visible && hasVisibleObjectWithFilter(filter)) ||
+        (!visible && !hasVisibleObjectWithFilter(filter))) {
+      return;
+    }
+    int minStepTime = 100;
+    int steps = 10;
+    int stepTime = timeout / steps;
+    if (stepTime < minStepTime) {
+      steps = timeout / minStepTime;
+      stepTime = minStepTime;
+    }
+    for (int i = steps; i > 0; i--) {
+      cyborg.wait(stepTime);
+      if ((visible && hasVisibleObjectWithFilter(filter)) ||
+          (!visible && !hasVisibleObjectWithFilter(filter))) {
+        break;
+      }
+    }
+    if ((visible && !hasVisibleObjectWithFilter(filter)) ||
+        (!visible && hasVisibleObjectWithFilter(filter))) {
+      fail("Timed out waiting for object to (dis)appear.");
+    }
   }
 
   public boolean hasVisibleObjectWithFilter(Filter filter) {
@@ -164,6 +198,7 @@ public class CyborgTest {
       testMethods = new ArrayList<>();
       testMethods.add(soloTestMethod);
     }
+    // Collections.sort(testMethods);
     System.err.println("\n");
     for (CyborgTestMethod testMethod : testMethods) {
       currentTestMethod = testMethod;
@@ -214,7 +249,7 @@ public class CyborgTest {
     });
   }
 
-  private static class CyborgTestMethod {
+  private static class CyborgTestMethod implements Comparable<CyborgTestMethod> {
 
     private enum Status {
       PASS, FAIL;
@@ -228,6 +263,11 @@ public class CyborgTest {
       this.method = method;
       this.name = name;
       this.status = Status.PASS;
+    }
+
+    @Override
+    public int compareTo(CyborgTestMethod other) {
+      return this.name.compareTo(other.name);
     }
   }
 }
