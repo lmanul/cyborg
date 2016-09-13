@@ -222,7 +222,11 @@ public class CyborgTest {
         }
         System.err.println("");
       } catch (Exception e) {
-        System.err.println("Caught exception trying to run test " + e.getCause());
+        System.err.println("Caught exception trying to run test");
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        System.err.println(sw.toString());
       }
     }
     System.err.println("\nAll done.");

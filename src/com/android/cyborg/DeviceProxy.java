@@ -98,16 +98,18 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     runShellCommand("input keyevent KEYCODE_HOME");
   }
 
+  public void getDisplaySize(IShellOutputReceiver receiver) {
+    try {
+      getFirstDevice().executeShellCommand("wm size", receiver);
+    } catch (Exception e) {
+      System.err.println(e.getCause());
+    }
+  }
+
   public void runShellCommand(String command) {
     try {
       getFirstDevice().executeShellCommand(command, this);
-    } catch (IOException e) {
-      System.err.println(e.getCause());
-    } catch (TimeoutException e) {
-      System.err.println(e.getCause());
-    } catch (AdbCommandRejectedException e) {
-      System.err.println(e.getCause());
-    } catch (ShellCommandUnresponsiveException e) {
+    } catch (Exception e) {
       System.err.println(e.getCause());
     }
   }

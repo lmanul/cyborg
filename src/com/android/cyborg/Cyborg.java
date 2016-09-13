@@ -17,6 +17,7 @@
 package com.android.cyborg;
 
 import com.android.ddmlib.IDevice;
+import com.android.ddmlib.IShellOutputReceiver;
 
 import java.awt.Point;
 import java.lang.InterruptedException;
@@ -32,13 +33,33 @@ public class Cyborg {
   /** The device paired with this cyborg instance. */
   private IDevice device;
 
+  private int displayWidth;
+  private int displayHeight;
+
   static {
     deviceProxy = DeviceProxy.getInstance();
   }
 
   public Cyborg(IDevice device) {
     this.device = device;
-    System.err.println("Cyborg initialized with device " + device.getSerialNumber());
+    getDeviceDisplaySize();
+    System.err.println("Cyborg initialized with device " + device.getSerialNumber() + ", " +
+        displayWidth + "x" + displayHeight);
+  }
+
+  private void getDeviceDisplaySize() {
+    deviceProxy.getDisplaySize(new IShellOutputReceiver() {
+      @Override
+      public void addOutput(byte[] data, int offset, int length) {
+        String[] spacedPieces = new String(data).trim().split(" ");
+        displayWidth = Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[0]);
+        displayHeight = Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[1]);
+      }
+      @Override
+      public void flush() {}
+      @Override
+        public boolean isCancelled() { return false; }
+      });
   }
 
   public void pressHome() {

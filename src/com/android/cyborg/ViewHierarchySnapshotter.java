@@ -123,6 +123,13 @@ public class ViewHierarchySnapshotter {
       /* if (currentParent.parent == null) {
         System.err.println("Root");
       } */
+      if (currentParent.parent == null) {
+        if (currentParent.namedProperties.containsKey("layout:windowLeft")) {
+          globalX += Integer.parseInt(currentParent.namedProperties.get("layout:windowLeft").value);
+          globalY += Integer.parseInt(currentParent.namedProperties.get("layout:windowTop").value);
+        }
+        // System.err.println(currentParent.namedProperties);
+      }
       currentParent = currentParent.parent;
     }
     int x = 0, y = 0, width = 10, height = 10;
