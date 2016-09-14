@@ -20,7 +20,6 @@ import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.Client;
 import com.android.ddmlib.ClientData;
 import com.android.ddmlib.HandleViewDebug;
-import com.android.ddmlib.IDevice;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.SortedMultiset;
@@ -45,7 +44,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ViewHierarchySnapshotter {
 
-  public static List<ViewNode> getNodesForFilter(IDevice device, final Filter filter) {
+  public static List<ViewNode> getNodesForFilter(CyborgDevice device, final Filter filter) {
     Client[] allClients = device.getClients();
     ExecutorService executorService = Executors.newFixedThreadPool(10);
     List<Callable<List<ViewNode>>> callables = new ArrayList<>();
@@ -57,7 +56,7 @@ public class ViewHierarchySnapshotter {
         try {
           List<String> windowTitles = new ListViewRootsHandler().getWindows(c, 5, TimeUnit.SECONDS);
           for (final String windowTitle : windowTitles) {
-            callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), filter));
+            callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), device, filter));
           }
         } catch (IOException ignored) { }
       }
@@ -140,12 +139,14 @@ public class ViewHierarchySnapshotter {
   private static class HierarchyExplorerCallable implements Callable<List<ViewNode>> {
     private final Filter filter;
     private final Client client;
+    private final CyborgDevice device;
     private final String windowTitle;
     private final List<ViewNode> foundEls = new ArrayList<>();
 
-    public  HierarchyExplorerCallable(Window window, Filter filter) {
+    public  HierarchyExplorerCallable(Window window, CyborgDevice device, Filter filter) {
       this.client = window.getClient();
       this.windowTitle = window.getTitle();
+      this.device = device;
       this.filter = filter;
     }
 
@@ -159,7 +160,7 @@ public class ViewHierarchySnapshotter {
       if (root == null) {
         return;
       }
-      if (!viewIsVisible(root)) {
+      if (!viewIsVisible(root, device)) {
         return;
       }
       if (filter.apply(root)) {
@@ -172,9 +173,16 @@ public class ViewHierarchySnapshotter {
     }
   }
 
-  private static boolean viewIsVisible(ViewNode node) {
+  private static boolean viewIsVisible(ViewNode node, CyborgDevice device) {
     int visibility = Integer.parseInt(node.namedProperties.get("misc:visibility").value);
     if (visibility != 0 /* View.VISIBLE */) {
+      return false;
+    }
+    Rect rect = findVisibleRect(node);
+    if (rect.x > device.displayWidth ||
+        rect.y > device.displayHeight ||
+        rect.x + rect.w < 0 ||
+        rect.y + rect.h < 0) {
       return false;
     }
     return true;

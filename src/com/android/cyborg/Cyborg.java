@@ -31,7 +31,7 @@ public class Cyborg {
   private static final DeviceProxy deviceProxy;
 
   /** The device paired with this cyborg instance. */
-  private IDevice device;
+  private CyborgDevice device;
 
   private int displayWidth;
   private int displayHeight;
@@ -41,10 +41,8 @@ public class Cyborg {
   }
 
   public Cyborg(IDevice device) {
-    this.device = device;
+    this.device = new CyborgDevice(device);
     getDeviceDisplaySize();
-    System.err.println("Cyborg initialized with device " + device.getSerialNumber() + ", " +
-        displayWidth + "x" + displayHeight);
   }
 
   private void getDeviceDisplaySize() {
@@ -52,8 +50,12 @@ public class Cyborg {
       @Override
       public void addOutput(byte[] data, int offset, int length) {
         String[] spacedPieces = new String(data).trim().split(" ");
-        displayWidth = Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[0]);
-        displayHeight = Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[1]);
+        Cyborg.this.device.displayWidth =
+            Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[0]);
+        Cyborg.this.device.displayHeight =
+            Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[1]);
+        System.err.println("Cyborg initialized with device " + device.getSerialNumber() + ", " +
+            Cyborg.this.device.displayWidth + "x" + Cyborg.this.device.displayHeight);
       }
       @Override
       public void flush() {}
