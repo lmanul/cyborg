@@ -60,6 +60,10 @@ public class CyborgTest {
     tapOnRect(rects.get(0));
   }
 
+  public void dragAndDrop(Rect src, Rect dest) {
+    cyborg.dragAndDrop(src, dest);
+  }
+
   public void waitUntilObjectIsVisible(Filter filter, int timeout) {
     waitUntilObjectIsVisible(filter, timeout, true);
   }
@@ -104,7 +108,23 @@ public class CyborgTest {
       return null;
     }
     ViewNode node = nodes.get(0);
+    if (!node.namedProperties.containsKey("text:text")) {
+      return null;
+    }
     return node.namedProperties.get("text:text").value;
+  }
+
+  public String getContentDescriptionForObjectWithFilter(Filter filter) {
+    List<ViewNode> nodes = cyborg.getNodesForObjectsWithFilter(filter);
+    if (nodes.size() != 1) {
+      fail("Was expecting exactly one object, but found " + nodes.size());
+      return null;
+    }
+    ViewNode node = nodes.get(0);
+    if (!node.namedProperties.containsKey("accessibility:contentDescription")) {
+      return null;
+    }
+    return node.namedProperties.get("accessibility:contentDescription").value;
   }
 
   public void assertTrue(boolean condition) {
@@ -229,7 +249,13 @@ public class CyborgTest {
         System.err.println(sw.toString());
       }
     }
-    System.err.println("\nAll done.");
+    int passed = 0;
+    for (CyborgTestMethod method : testMethods) {
+      passed += (method.status == CyborgTestMethod.Status.PASS) ? 1 : 0;
+    }
+    boolean plural = testMethods.size() > 1;
+    System.err.println("\n" + passed + " of " + testMethods.size() +
+        " test" + (plural ? "s" : "") + " passed.");
     System.exit(0);
   }
 

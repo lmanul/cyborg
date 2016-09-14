@@ -68,8 +68,24 @@ public abstract class Filter {
     return new Filter() {
       @Override
       public boolean apply(ViewNode node) {
+        if (!node.namedProperties.containsKey("text:text")) {
+          return false;
+        }
         String text = node.namedProperties.get("text:text").value;
         return text.equals(searchText);
+      }
+    };
+  }
+
+  public static Filter nthChildOfParentWithId(int n, String id) {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        if (node.parent != null && idEquals(node.parent, id) &&
+            node.parent.children.get(n) == node) {
+          return true;
+        }
+        return false;
       }
     };
   }

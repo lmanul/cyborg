@@ -110,4 +110,9 @@ public class Cyborg {
     // Built-in half-second wait after tapping.
     onAfterUserInteraction();
   }
+
+  public void dragAndDrop(Rect src, Rect dest) {
+    DeviceProxy.getInstance().runShellCommand("input swipe " + src.getCenter().x + " " +
+        src.getCenter().y + " " + dest.getCenter().x + " " + dest.getCenter().y + " 2000");
+  }
 }
