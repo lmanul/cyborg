@@ -60,8 +60,8 @@ public class CyborgTest {
     tapOnRect(rects.get(0));
   }
 
-  public void dragAndDrop(Rect src, Rect dest) {
-    cyborg.dragAndDrop(src, dest);
+  public void dragAndDrop(Rect src, Rect dest, int time) {
+    cyborg.dragAndDrop(src, dest, time);
   }
 
   public void waitUntilObjectIsVisible(Filter filter, int timeout) {

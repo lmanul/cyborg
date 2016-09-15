@@ -111,8 +111,9 @@ public class Cyborg {
     onAfterUserInteraction();
   }
 
-  public void dragAndDrop(Rect src, Rect dest) {
+  public void dragAndDrop(Rect src, Rect dest, int time) {
+    // System.err.println("Drag & drop " + src + " to " + dest);
     DeviceProxy.getInstance().runShellCommand("input swipe " + src.getCenter().x + " " +
-        src.getCenter().y + " " + dest.getCenter().x + " " + dest.getCenter().y + " 2000");
+        src.getCenter().y + " " + dest.getCenter().x + " " + dest.getCenter().y + " " + time);
   }
 }
