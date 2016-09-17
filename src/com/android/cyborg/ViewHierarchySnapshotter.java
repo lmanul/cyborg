@@ -123,9 +123,9 @@ public class ViewHierarchySnapshotter {
         System.err.println("Root");
       } */
       if (currentParent.parent == null) {
-        if (currentParent.namedProperties.containsKey("layout:windowLeft")) {
-          globalX += Integer.parseInt(currentParent.namedProperties.get("layout:windowLeft").value);
-          globalY += Integer.parseInt(currentParent.namedProperties.get("layout:windowTop").value);
+        if (currentParent.namedProperties.containsKey("window:left")) {
+          globalX += Integer.parseInt(currentParent.namedProperties.get("window:left").value);
+          globalY += Integer.parseInt(currentParent.namedProperties.get("window:top").value);
         }
         // System.err.println(currentParent.namedProperties);
       }
@@ -300,7 +300,8 @@ public class ViewHierarchySnapshotter {
   }
 
   private static boolean isEncoded(byte[] data) {
-    return data != null && data[0] == 'M';
+    // The first byte should be the "S" corresponding to the first short for window position.
+    return data != null && data[0] == 'S';
   }
 
   private void addAll(ViewNode node, SortedMultiset<String> set, Map<String, ViewNode> props) {
