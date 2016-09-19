@@ -20,6 +20,8 @@ import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
 
 import java.awt.Point;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.lang.InterruptedException;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
@@ -78,6 +80,10 @@ public class Cyborg {
     try {
       TimeUnit.MILLISECONDS.sleep(milliseconds);
     } catch (InterruptedException e) {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      new RuntimeException("").printStackTrace(pw);
+      System.err.println(sw.toString());
     }
   }
 

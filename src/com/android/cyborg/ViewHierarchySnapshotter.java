@@ -301,7 +301,7 @@ public class ViewHierarchySnapshotter {
 
   private static boolean isEncoded(byte[] data) {
     // The first byte should be the "S" corresponding to the first short for window position.
-    return data != null && data[0] == 'S';
+    return data != null && (data[0] == 'S' || data[0] == 'M');
   }
 
   private void addAll(ViewNode node, SortedMultiset<String> set, Map<String, ViewNode> props) {
