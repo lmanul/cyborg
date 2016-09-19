@@ -87,7 +87,7 @@ public class Cyborg {
     }
   }
 
-  public void onAfterUserInteraction() {
+  private void onAfterUserInteraction() {
     wait(300);
   }
 
