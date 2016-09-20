@@ -16,9 +16,19 @@
 
 package com.android.cyborg;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Filter {
 
   public abstract boolean apply(ViewNode node);
+  abstract String getShortDesc();
+
+  @Override
+  public String toString() {
+    return "<Filter for " + getShortDesc() + ">";
+  }
+
 
   public static Filter withId(String id) {
     return new Filter() {
@@ -28,8 +38,8 @@ public abstract class Filter {
       }
 
       @Override
-      public String toString() {
-        return "<Filter for id='" + id + "'>";
+      String getShortDesc() {
+        return "id='" + id + "'";
       }
     };
   }
@@ -43,8 +53,8 @@ public abstract class Filter {
       }
 
       @Override
-      public String toString() {
-        return "<Filter for contentDesc='" + text + "...'>";
+      String getShortDesc() {
+        return "contentDesc='" + text + "...'";
       }
     };
   }
@@ -58,8 +68,8 @@ public abstract class Filter {
       }
 
       @Override
-      public String toString() {
-        return "<Filter for contentDesc='..." + text + "'>";
+      String getShortDesc() {
+        return "contentDesc='..." + text + "'";
       }
     };
   }
@@ -74,6 +84,11 @@ public abstract class Filter {
         String text = node.namedProperties.get("text:text").value;
         return text.equals(searchText);
       }
+
+      @Override
+      String getShortDesc() {
+        return "text='..." + searchText + "'";
+      }
     };
   }
 
@@ -87,6 +102,11 @@ public abstract class Filter {
         }
         return false;
       }
+
+      @Override
+      String getShortDesc() {
+        return "child #" + n + "of parent with id " + id;
+      }
     };
   }
 
@@ -97,6 +117,11 @@ public abstract class Filter {
         String clickable = node.namedProperties.get("misc:clickable").value;
         return clickable.equals("true");
       }
+
+      @Override
+      String getShortDesc() {
+        return "clickable";
+      }
     };
   }
 
@@ -105,6 +130,11 @@ public abstract class Filter {
       @Override
       public boolean apply(ViewNode node) {
         return node.parent != null && idEquals(node.parent, id);
+      }
+
+      @Override
+      String getShortDesc() {
+        return "parentId='" + id + "'";
       }
     };
   }
@@ -120,6 +150,16 @@ public abstract class Filter {
         }
         return true;
       }
+
+      @Override
+      String getShortDesc() {
+        StringBuilder sb = new StringBuilder();
+        List<String> descriptions = new ArrayList<>();
+        for (int i = 0; i < filters.length; i++) {
+          descriptions.add(filters[i].getShortDesc());
+        }
+        return String.join(" AND ", descriptions);
+      }
     };
   }
 
@@ -133,6 +173,16 @@ public abstract class Filter {
           }
         }
         return false;
+      }
+
+      @Override
+      String getShortDesc() {
+        StringBuilder sb = new StringBuilder();
+        List<String> descriptions = new ArrayList<>();
+        for (int i = 0; i < filters.length; i++) {
+          descriptions.add(filters[i].getShortDesc());
+        }
+        return String.join(" OR ", descriptions);
       }
     };
   }

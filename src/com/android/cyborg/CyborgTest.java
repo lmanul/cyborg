@@ -93,7 +93,7 @@ public class CyborgTest {
     }
     if ((visible && !hasVisibleObjectWithFilter(filter)) ||
         (!visible && hasVisibleObjectWithFilter(filter))) {
-      fail("Timed out waiting for object to (dis)appear.");
+      fail("Timed out waiting for object to (dis)appear: " + filter);
     }
   }
 
