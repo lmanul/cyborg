@@ -82,7 +82,7 @@ public abstract class Filter {
           return false;
         }
         String text = node.namedProperties.get("text:text").value;
-        return text.equals(searchText);
+        return text.trim().equals(searchText.trim());
       }
 
       @Override
