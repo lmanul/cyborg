@@ -87,7 +87,7 @@ public abstract class Filter {
 
       @Override
       String getShortDesc() {
-        return "text='..." + searchText + "'";
+        return "text='" + searchText + "'";
       }
     };
   }
