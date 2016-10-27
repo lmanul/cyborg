@@ -125,6 +125,21 @@ public abstract class Filter {
     };
   }
 
+  public static Filter isFocused() {
+    return new Filter() {
+      @Override
+      public boolean apply(ViewNode node) {
+        String isFocused = node.namedProperties.get("focus:isFocused").value;
+        return isFocused.equals("true");
+      }
+
+      @Override
+      String getShortDesc() {
+        return "is focused";
+      }
+    };
+  }
+
   public static Filter withParentWithId(String id) {
     return new Filter() {
       @Override
