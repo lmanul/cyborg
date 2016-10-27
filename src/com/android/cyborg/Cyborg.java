@@ -109,6 +109,10 @@ public class Cyborg {
     return rects;
   }
 
+  public Rect getRectForNode(ViewNode node) {
+    return ViewHierarchySnapshotter.findVisibleRect(node);
+  }
+
   public void tapOnRect(Rect rect) {
     Point toClick = rect.getCenter();
     // System.err.println("Tap on (" + toClick.x + ", " + toClick.y + ")");

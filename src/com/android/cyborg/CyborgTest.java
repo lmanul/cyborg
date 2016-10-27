@@ -29,8 +29,8 @@ import java.util.List;
 
 public class CyborgTest {
 
-  private Cyborg cyborg;
   private CyborgTestMethod currentTestMethod;
+  protected Cyborg cyborg;
 
   public void setCyborg(Cyborg cyborg) {
     this.cyborg = cyborg;
