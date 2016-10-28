@@ -161,6 +161,10 @@ public class CyborgTest {
     cyborg.pressKeyWithCode(keyCode);
   }
 
+  public void pressKeyWithCode(int keyCode, int waitTime) {
+    cyborg.pressKeyWithCode(keyCode, waitTime);
+  }
+
   public void wait(int milliseconds) {
     cyborg.wait(milliseconds);
   }

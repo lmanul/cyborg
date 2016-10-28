@@ -76,6 +76,12 @@ public class Cyborg {
     onAfterUserInteraction();
   }
 
+  public void pressKeyWithCode(int keyCode, int waitTime) {
+    DeviceProxy.getInstance().runShellCommand("input keyevent " + keyCode);
+    onAfterUserInteraction(waitTime);
+  }
+
+
   public void wait(int milliseconds) {
     try {
       TimeUnit.MILLISECONDS.sleep(milliseconds);
@@ -88,7 +94,11 @@ public class Cyborg {
   }
 
   private void onAfterUserInteraction() {
-    wait(300);
+    onAfterUserInteraction(300);
+  }
+
+  private void onAfterUserInteraction(int waitTime) {
+    this.wait(waitTime);
   }
 
   public boolean isElementWithFilterVisible(Filter filter) {
