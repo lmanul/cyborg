@@ -81,7 +81,6 @@ public class Cyborg {
     onAfterUserInteraction(waitTime);
   }
 
-
   public void wait(int milliseconds) {
     try {
       TimeUnit.MILLISECONDS.sleep(milliseconds);
@@ -119,7 +118,7 @@ public class Cyborg {
     return rects;
   }
 
-  public Rect getRectForNode(ViewNode node) {
+  public static Rect getRectForNode(ViewNode node) {
     return ViewHierarchySnapshotter.findVisibleRect(node);
   }
 
