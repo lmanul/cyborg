@@ -1,3 +1,8 @@
-*~
-build/
-.gradle/
+**/.idea/misc.xml
+**/.idea/tasks.xml
+**/.idea/workspace.xml
+**/.gradle
+build/classes
+build/libs/cyborg.jar
+build/tmp
+classes
