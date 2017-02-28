@@ -158,8 +158,8 @@ public abstract class Filter {
     return new Filter() {
       @Override
       public boolean apply(ViewNode node) {
-        for (int i = 0; i < filters.length; i++) {
-          if (!filters[i].apply(node)) {
+        for (Filter filter : filters) {
+          if (!filter.apply(node)) {
             return false;
           }
         }
@@ -168,10 +168,9 @@ public abstract class Filter {
 
       @Override
       String getShortDesc() {
-        StringBuilder sb = new StringBuilder();
         List<String> descriptions = new ArrayList<>();
-        for (int i = 0; i < filters.length; i++) {
-          descriptions.add(filters[i].getShortDesc());
+        for (Filter filter : filters) {
+          descriptions.add(filter.getShortDesc());
         }
         return String.join(" AND ", descriptions);
       }
@@ -182,8 +181,8 @@ public abstract class Filter {
     return new Filter() {
       @Override
       public boolean apply(ViewNode node) {
-        for (int i = 0; i < filters.length; i++) {
-          if (filters[i].apply(node)) {
+        for (Filter filter : filters) {
+          if (filter.apply(node)) {
             return true;
           }
         }
@@ -192,10 +191,9 @@ public abstract class Filter {
 
       @Override
       String getShortDesc() {
-        StringBuilder sb = new StringBuilder();
         List<String> descriptions = new ArrayList<>();
-        for (int i = 0; i < filters.length; i++) {
-          descriptions.add(filters[i].getShortDesc());
+        for (Filter filter : filters) {
+          descriptions.add(filter.getShortDesc());
         }
         return String.join(" OR ", descriptions);
       }

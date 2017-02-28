@@ -40,7 +40,7 @@ public class CyborgTest {
     return cyborg.getRectsForObjectsWithFilter(filter);
   }
 
-  public void tapOnRect(Rect rect) {
+  private void tapOnRect(Rect rect) {
     cyborg.tapOnRect(rect);
   }
 
@@ -72,7 +72,7 @@ public class CyborgTest {
     waitUntilObjectIsVisible(filter, timeout, false);
   }
 
-  public void waitUntilObjectIsVisible(Filter filter, int timeout, boolean visible) {
+  private void waitUntilObjectIsVisible(Filter filter, int timeout, boolean visible) {
     if ((visible && hasVisibleObjectWithFilter(filter)) ||
         (!visible && !hasVisibleObjectWithFilter(filter))) {
       return;
@@ -97,7 +97,7 @@ public class CyborgTest {
     }
   }
 
-  public boolean hasVisibleObjectWithFilter(Filter filter) {
+  private boolean hasVisibleObjectWithFilter(Filter filter) {
     return cyborg.isElementWithFilterVisible(filter);
   }
 
@@ -177,7 +177,7 @@ public class CyborgTest {
     // Subclasses will override.
   }
 
-  public void fail(String message) {
+  private void fail(String message) {
     if (message != null) {
       System.err.println(message);
     }
@@ -188,7 +188,7 @@ public class CyborgTest {
     System.err.println(sw.toString());
   }
 
-  public void runTests(CyborgTest testObject) {
+  private void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
     List<CyborgTestMethod> testMethods = new ArrayList<>();
@@ -289,9 +289,9 @@ public class CyborgTest {
       PASS, FAIL;
     }
 
-    public final Method method;
-    public final String name;
-    public Status status;
+    final Method method;
+    final String name;
+    Status status;
 
     CyborgTestMethod(Method method, String name) {
       this.method = method;

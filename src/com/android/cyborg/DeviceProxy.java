@@ -37,11 +37,9 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
 
   private static DeviceProxy mInstance;
   private DeviceReadyCallback callback;
+  private Set<IDevice> mConnectedDevices = new HashSet<>();
 
-  AndroidDebugBridge mAdb = AndroidDebugBridge.createBridge();
-  Set<IDevice> mConnectedDevices = new HashSet<>();
-
-  public static DeviceProxy getInstance() {
+  static DeviceProxy getInstance() {
     if (mInstance == null) {
       mInstance = new DeviceProxy();
     }
@@ -49,10 +47,10 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
   }
 
   private DeviceProxy() {
-    mAdb.addDeviceChangeListener(this);
+    AndroidDebugBridge.addDeviceChangeListener(this);
   }
 
-  public void getFirstConnectedDevice(DeviceReadyCallback callback) {
+  void getFirstConnectedDevice(DeviceReadyCallback callback) {
     this.callback = callback;
     if (mConnectedDevices.size() > 0) {
       this.callback.onDeviceReady((IDevice) mConnectedDevices.toArray()[0]);
@@ -84,20 +82,20 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
   }
 
   private void handleDeviceReady() {
-    mAdb.removeDeviceChangeListener(this);
+    AndroidDebugBridge.removeDeviceChangeListener(this);
     callback.onDeviceReady(getFirstDevice());
     callback = null;
   }
 
-  public IDevice getFirstDevice() {
+  private IDevice getFirstDevice() {
     return (IDevice) mConnectedDevices.toArray()[0];
   }
 
-  public void pressHome() {
+  private void pressHome() {
     runShellCommand("input keyevent KEYCODE_HOME");
   }
 
-  public void getDisplaySize(IShellOutputReceiver receiver) {
+  private void getDisplaySize(IShellOutputReceiver receiver) {
     try {
       getFirstDevice().executeShellCommand("wm size", receiver);
     } catch (Exception e) {
@@ -105,7 +103,7 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     }
   }
 
-  public void runShellCommand(String command) {
+  private void runShellCommand(String command) {
     try {
       getFirstDevice().executeShellCommand(command, this);
     } catch (Exception e) {
