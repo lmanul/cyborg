@@ -33,6 +33,7 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
 
   static {
     AndroidDebugBridge.init(true);
+    AndroidDebugBridge.createBridge();
   }
 
   private static DeviceProxy mInstance;
