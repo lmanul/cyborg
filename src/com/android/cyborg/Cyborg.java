@@ -35,9 +35,6 @@ public class Cyborg {
   /** The device paired with this cyborg instance. */
   private CyborgDevice device;
 
-  private int displayWidth;
-  private int displayHeight;
-
   static {
     deviceProxy = DeviceProxy.getInstance();
   }
