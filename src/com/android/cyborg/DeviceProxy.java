@@ -91,11 +91,11 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     return (IDevice) mConnectedDevices.toArray()[0];
   }
 
-  private void pressHome() {
+  void pressHome() {
     runShellCommand("input keyevent KEYCODE_HOME");
   }
 
-  private void getDisplaySize(IShellOutputReceiver receiver) {
+  void getDisplaySize(IShellOutputReceiver receiver) {
     try {
       getFirstDevice().executeShellCommand("wm size", receiver);
     } catch (Exception e) {
@@ -103,7 +103,7 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     }
   }
 
-  private void runShellCommand(String command) {
+  void runShellCommand(String command) {
     try {
       getFirstDevice().executeShellCommand(command, this);
     } catch (Exception e) {

@@ -177,7 +177,7 @@ public class CyborgTest {
     // Subclasses will override.
   }
 
-  private void fail(String message) {
+  public void fail(String message) {
     if (message != null) {
       System.err.println(message);
     }
