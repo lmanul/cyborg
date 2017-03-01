@@ -23,19 +23,19 @@ import java.util.Map;
 
 public class Decoder {
     // Prefixes for simple primitives. These match the JNI definitions.
-    public static final byte SIG_BOOLEAN = 'Z';
-    public static final byte SIG_BYTE = 'B';
-    public static final byte SIG_SHORT = 'S';
-    public static final byte SIG_INT = 'I';
-    public static final byte SIG_LONG = 'J';
-    public static final byte SIG_FLOAT = 'F';
-    public static final byte SIG_DOUBLE = 'D';
+    private static final byte SIG_BOOLEAN = 'Z';
+    private static final byte SIG_BYTE = 'B';
+    private static final byte SIG_SHORT = 'S';
+    private static final byte SIG_INT = 'I';
+    private static final byte SIG_LONG = 'J';
+    private static final byte SIG_FLOAT = 'F';
+    private static final byte SIG_DOUBLE = 'D';
 
     // Prefixes for some commonly used objects
-    public static final byte SIG_STRING = 'R';
+    private static final byte SIG_STRING = 'R';
 
-    public static final byte SIG_MAP = 'M'; // a map with an short key
-    public static final short SIG_END_MAP = 0;
+    private static final byte SIG_MAP = 'M'; // a map with an short key
+    private static final short SIG_END_MAP = 0;
 
     private final ByteBuffer mBuf;
 
