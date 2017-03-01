@@ -16,14 +16,11 @@
 
 package com.android.cyborg;
 
-import com.android.cyborg.DeviceProxy;
-import com.android.cyborg.DeviceReadyCallback;
 import com.android.ddmlib.IDevice;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 
