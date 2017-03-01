@@ -29,8 +29,23 @@ import java.util.List;
 
 public class CyborgTest {
 
+  private static CyborgTestOptions DEFAULT_OPTIONS;
   private CyborgTestMethod currentTestMethod;
+  private final CyborgTestOptions options;
   protected Cyborg cyborg;
+
+  static {
+    DEFAULT_OPTIONS = new CyborgTestOptions();
+    DEFAULT_OPTIONS.printStackTrace = true;
+  }
+
+  public CyborgTest() {
+    this(DEFAULT_OPTIONS);
+  }
+
+  public CyborgTest(CyborgTestOptions options) {
+    this.options = options;
+  }
 
   public void setCyborg(Cyborg cyborg) {
     this.cyborg = cyborg;
@@ -182,10 +197,12 @@ public class CyborgTest {
       System.err.println(message);
     }
     currentTestMethod.status = CyborgTestMethod.Status.FAIL;
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    new RuntimeException("").printStackTrace(pw);
-    System.err.println(sw.toString());
+    if (options.printStackTrace) {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      new RuntimeException("").printStackTrace(pw);
+      System.err.println(sw.toString());
+    }
   }
 
   private void runTests(CyborgTest testObject) {
