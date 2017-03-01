@@ -49,8 +49,7 @@ public class ViewHierarchySnapshotter {
     ExecutorService executorService = Executors.newFixedThreadPool(10);
     List<Callable<List<ViewNode>>> callables = new ArrayList<>();
 
-    for (int i = 0; i < allClients.length; i++) {
-      final Client c = allClients[i];
+    for (Client c : allClients) {
       ClientData cd = c.getClientData();
       if (cd.hasFeature(ClientData.FEATURE_VIEW_HIERARCHY)) {
         try {
@@ -165,10 +164,9 @@ public class ViewHierarchySnapshotter {
       }
       if (filter.apply(root)) {
         foundEls.add(root);
-      } else {
-        for (int i = 0; i < root.children.size(); i++) {
-          recursivelySearchWithFilter(root.children.get(i), filter);
-        }
+      }
+      for (int i = 0; i < root.children.size(); i++) {
+        recursivelySearchWithFilter(root.children.get(i), filter);
       }
     }
   }

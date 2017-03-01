@@ -89,11 +89,11 @@ public class Cyborg {
     }
   }
 
-  private void onAfterUserInteraction() {
+  public void onAfterUserInteraction() {
     onAfterUserInteraction(300);
   }
 
-  private void onAfterUserInteraction(int waitTime) {
+  public void onAfterUserInteraction(int waitTime) {
     this.wait(waitTime);
   }
 
@@ -130,5 +130,9 @@ public class Cyborg {
   public void dragAndDrop(Rect src, Rect dest, int time) {
     DeviceProxy.getInstance().runShellCommand("input draganddrop " + src.getCenter().x + " " +
         src.getCenter().y + " " + dest.getCenter().x + " " + dest.getCenter().y + " " + time);
+  }
+
+  public void runShellCommand(String command) {
+    deviceProxy.runShellCommand(command);
   }
 }

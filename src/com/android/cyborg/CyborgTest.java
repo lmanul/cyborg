@@ -205,7 +205,7 @@ public class CyborgTest {
     }
   }
 
-  private void runTests(CyborgTest testObject) {
+  public void runTests(CyborgTest testObject) {
     Class clazz = testObject.getClass();
     Method[] m = clazz.getDeclaredMethods();
     List<CyborgTestMethod> testMethods = new ArrayList<>();
@@ -244,14 +244,14 @@ public class CyborgTest {
     for (CyborgTestMethod testMethod : testMethods) {
       currentTestMethod = testMethod;
       try {
+        if (setUp != null) {
+          setUp.invoke(testObject);
+        }
         StringBuilder sb = new StringBuilder(testMethod.name + "...");
         for (int i = testMethod.name.length(); i <= longestMethodNameLength; i++) {
           sb.append(" ");
         }
         System.err.print(sb.toString());
-        if (setUp != null) {
-          setUp.invoke(testObject);
-        }
         testMethod.method.invoke(testObject);
         if (tearDown != null) {
           tearDown.invoke(testObject);
@@ -303,7 +303,7 @@ public class CyborgTest {
   private static class CyborgTestMethod implements Comparable<CyborgTestMethod> {
 
     private enum Status {
-      PASS, FAIL;
+      PASS, FAIL
     }
 
     final Method method;

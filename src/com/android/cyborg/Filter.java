@@ -29,6 +29,20 @@ public abstract class Filter {
     return "<Filter for " + getShortDesc() + ">";
   }
 
+  public static Filter empty() {
+    return new Filter() {
+
+      @Override
+      public boolean apply(ViewNode node) {
+        return true;
+      }
+
+      @Override
+      String getShortDesc() {
+        return "empty filter (matches all nodes)";
+      }
+    };
+  }
 
   public static Filter withId(String id) {
     return new Filter() {
