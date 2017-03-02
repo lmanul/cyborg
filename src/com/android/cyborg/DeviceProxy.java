@@ -21,6 +21,7 @@ import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.Client;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
+import com.android.ddmlib.RawImage;
 import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.android.ddmlib.TimeoutException;
 
@@ -104,7 +105,20 @@ public class DeviceProxy implements AndroidDebugBridge.IDeviceChangeListener,
     }
   }
 
-  void runShellCommand(String command) {
+  public RawImage getScreenshot() {
+    try {
+      return getFirstDevice().getScreenshot();
+    } catch (TimeoutException e) {
+      e.printStackTrace();
+    } catch (AdbCommandRejectedException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public void runShellCommand(String command) {
     try {
       getFirstDevice().executeShellCommand(command, this);
     } catch (Exception e) {

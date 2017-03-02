@@ -16,10 +16,14 @@
 
 package com.android.cyborg;
 
+import com.android.ddmlib.AdbCommandRejectedException;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
 
+import com.android.ddmlib.RawImage;
+import com.android.ddmlib.TimeoutException;
 import java.awt.Point;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.lang.InterruptedException;
@@ -77,6 +81,11 @@ public class Cyborg {
     DeviceProxy.getInstance().runShellCommand("input keyevent " + keyCode);
     onAfterUserInteraction(waitTime);
   }
+
+  public RawImage getScreenshot() {
+    return DeviceProxy.getInstance().getScreenshot();
+  }
+
 
   public void wait(int milliseconds) {
     try {
