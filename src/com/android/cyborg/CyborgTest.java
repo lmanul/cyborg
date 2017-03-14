@@ -58,18 +58,22 @@ public class CyborgTest {
 
   public void tapOnObjectWithFilter(Filter filter) {
     List<Rect> rects = cyborg.getRectsForObjectsWithFilter(filter);
-    if (rects.size() == 0) {
-      fail("Can't find object to tap on for " + filter);
-      return;
-    } else if (rects.size() > 1) {
-      fail("Found " + rects.size() + " objects to tap on for " + filter);
-      int i = 1;
-      for (Rect rect : rects) {
-        System.err.println("Object " + (i++) + " located at " + rect);
+    try {
+      if (rects.size() == 0) {
+        fail("Can't find object to tap on for " + filter);
+        return;
+      } else if (rects.size() > 1) {
+        fail("Found " + rects.size() + " objects to tap on for " + filter);
+        int i = 1;
+        for (Rect rect : rects) {
+          System.err.println("Object " + (i++) + " located at " + rect);
+        }
+        return;
       }
-      return;
+      tapOnRect(rects.get(0));
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    tapOnRect(rects.get(0));
   }
 
   public void dragAndDrop(Rect src, Rect dest, int time) {
@@ -105,7 +109,11 @@ public class CyborgTest {
     }
     if ((visible && !hasVisibleObjectWithFilter(filter)) ||
         (!visible && hasVisibleObjectWithFilter(filter))) {
-      fail("Timed out waiting for object to " + (visible ? "" : "dis") + "appear: " + filter);
+      try {
+        fail("Timed out waiting for object to " + (visible ? "" : "dis") + "appear: " + filter);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -116,7 +124,11 @@ public class CyborgTest {
   public String getTextForObjectWithFilter(Filter filter) {
     List<ViewNode> nodes = cyborg.getNodesForObjectsWithFilter(filter);
     if (nodes.size() != 1) {
-      fail("Was expecting exactly one object, but found " + nodes.size());
+      try {
+        fail("Was expecting exactly one object, but found " + nodes.size());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       return null;
     }
     ViewNode node = nodes.get(0);
@@ -129,7 +141,11 @@ public class CyborgTest {
   public String getContentDescriptionForObjectWithFilter(Filter filter) {
     List<ViewNode> nodes = cyborg.getNodesForObjectsWithFilter(filter);
     if (nodes.size() != 1) {
-      fail("Was expecting exactly one object, but found " + nodes.size());
+      try {
+        fail("Was expecting exactly one object, but found " + nodes.size());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       return null;
     }
     ViewNode node = nodes.get(0);
@@ -139,11 +155,11 @@ public class CyborgTest {
     return node.namedProperties.get("accessibility:contentDescription").value;
   }
 
-  public void assertTrue(boolean condition) {
+  public void assertTrue(boolean condition) throws Exception {
     assertTrue(null, condition);
   }
 
-  public void assertTrue(String message, boolean condition) {
+  public void assertTrue(String message, boolean condition) throws Exception {
     if (message == null || message.isEmpty()) {
       message = "Called assertTrue with false argument.";
     }
@@ -152,11 +168,11 @@ public class CyborgTest {
     }
   }
 
-  public void assertFalse(boolean condition) {
+  public void assertFalse(boolean condition) throws Exception {
     assertFalse(null, condition);
   }
 
-  public void assertFalse(String message, boolean condition) {
+  public void assertFalse(String message, boolean condition) throws Exception {
     if (message == null || message.isEmpty()) {
       message = "Called assertFalse with true argument.";
     }
@@ -189,7 +205,7 @@ public class CyborgTest {
     // Subclasses will override.
   }
 
-  public void fail(String message) {
+  public void fail(String message) throws Exception {
     if (message != null) {
       System.err.println(message);
     }
@@ -197,8 +213,10 @@ public class CyborgTest {
     if (options.printStackTrace) {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);
-      new RuntimeException("").printStackTrace(pw);
+      Exception e = new RuntimeException("");
+      e.printStackTrace(pw);
       System.err.println(sw.toString());
+      throw e;
     }
   }
 
@@ -210,10 +228,7 @@ public class CyborgTest {
     Method setUp = null, tearDown = null;
     int longestMethodNameLength = 0;
     for (int i = 0; i < m.length; i++) {
-      String methodFullName = m[i].toString();
-      String[] dotSeparated = methodFullName.split("[.]");
-      String lastPart = dotSeparated[dotSeparated.length - 1];
-      String methodName = lastPart.substring(0, lastPart.length() - 2);
+      String methodName = m[i].getName();
       if (methodName.startsWith("test")) {
         longestMethodNameLength = java.lang.Math.max(longestMethodNameLength, methodName.length());
         testMethods.add(new CyborgTestMethod(m[i], methodName));
@@ -221,10 +236,10 @@ public class CyborgTest {
       if (methodName.startsWith("solotest")) {
         soloTestMethod = new CyborgTestMethod(m[i], methodName.substring(4));
       }
-      if (lastPart.equals("setUp()")) {
+      if (methodName.equals("setUp")) {
         setUp = m[i];
       }
-      if (lastPart.equals("tearDown()")) {
+      if (methodName.equals("tearDown")) {
         tearDown = m[i];
       }
     }

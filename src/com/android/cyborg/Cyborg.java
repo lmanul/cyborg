@@ -57,8 +57,7 @@ public class Cyborg {
             Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[0]);
         Cyborg.this.device.displayHeight =
             Integer.parseInt(spacedPieces[spacedPieces.length - 1].split("x")[1]);
-        System.err.println("Cyborg initialized with device " + device.getSerialNumber() + ", " +
-            Cyborg.this.device.displayWidth + "x" + Cyborg.this.device.displayHeight);
+        System.err.println("Found device " + device.getSerialNumber());
       }
       @Override
       public void flush() {}
