@@ -19,10 +19,10 @@ package com.android.cyborg;
 import java.awt.Point;
 
 public class Rect {
-  public final int x;
-  public final int y;
-  public final int w;
-  public final int h;
+  public int x;
+  public int y;
+  public int w;
+  public int h;
 
   public Rect(int x, int y, int w, int h) {
     this.x = x; this.y = y; this.w = w; this.h = h;
@@ -30,6 +30,21 @@ public class Rect {
 
   public Point getCenter() {
     return new Point(x + (w / 2), y + (h / 2));
+  }
+
+
+  public void grow(int units) {
+    x -= units;
+    y -= units;
+    w += 2 * units;
+    h += 2 * units;
+  }
+
+  public void shrink(int units) {
+    x += units;
+    y += units;
+    w -= 2 * units;
+    h -= 2 * units;
   }
 
   @Override
