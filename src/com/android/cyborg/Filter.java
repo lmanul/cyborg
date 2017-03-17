@@ -24,6 +24,9 @@ public abstract class Filter {
   public abstract boolean apply(ViewNode node);
   abstract String getShortDesc();
 
+  public String pkg;
+  public String activity;
+
   @Override
   public String toString() {
     return "<Filter for " + getShortDesc() + ">";

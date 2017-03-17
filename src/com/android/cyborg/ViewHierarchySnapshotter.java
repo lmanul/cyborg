@@ -55,6 +55,13 @@ public class ViewHierarchySnapshotter {
         try {
           List<String> windowTitles = new ListViewRootsHandler().getWindows(c, 5, TimeUnit.SECONDS);
           for (final String windowTitle : windowTitles) {
+            String[] pieces = windowTitle.split("/");
+            if (pieces.length > 0 && filter.pkg != null && !pieces[0].equals(filter.pkg)) {
+              continue;
+            }
+            if (pieces.length > 1 && filter.activity != null && !pieces[1].equals(filter.activity)) {
+              continue;
+            }
             callables.add(new HierarchyExplorerCallable(new Window(windowTitle, c), device, filter));
           }
         } catch (IOException ignored) { }
